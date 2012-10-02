@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-
+#is theis
 puts "what is your name ?"
 
 name = gets
