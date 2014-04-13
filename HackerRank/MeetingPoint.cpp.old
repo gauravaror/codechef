@@ -1,0 +1,94 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+//#define Debug
+
+using namespace std;
+
+long long ** houses;
+long long centroidx;
+long long centroidy;
+int people;
+long long eludistance(int,int);
+long long dist(int,int);
+void media_approx();
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    cin>>people;
+    centroidx = 0;
+    centroidy = 0;
+    houses = (long long **) malloc((people+1) * sizeof(long long));
+    for ( int i = 0; i < people ; i++ ) {
+        houses[i] = (long long *)malloc(2*sizeof(long long));
+        cin>>houses[i][0]>>houses[i][1];       
+        centroidx = centroidx + houses[i][0];
+        centroidy = centroidy + houses[i][1]; 
+    }  
+    houses[people] = (long long *)malloc(2*sizeof(long long));
+    houses[people][0] = floor(centroidx/ people);
+    houses[people][1] = floor(centroidy / people);
+    //media_approx();
+        
+    long long min  = 1000000000;
+    long long tmp =  1000000000;
+    int index = -1;
+    #ifdef Debug
+    cout<<"Centroids = ("<<houses[people][0]<<","<<houses[people][1]<<")"<<endl;
+    #endif
+    for ( int i = 0; i < people ; i++ ) {
+        tmp = dist(i,people);
+        if ( tmp < min )  {
+            min = tmp;
+            index = i;
+        }
+    }
+    #ifdef Debug
+    cout<<"Meeting point should be :"<<index<<endl;
+    #endif
+    int dist = 0;
+    for ( int i = 0; i < people ; i++ ) {
+        dist += eludistance(i,index);
+    }
+    #ifdef Debug
+    cout<<"Final Distance is :"<<dist<<endl;
+    #endif
+    cout<<dist<<endl;
+    return 0;
+}
+
+long long eludistance(int a, int b) { 
+    long long x = houses[a][0] - houses[b][0];
+    long long y = houses[a][1] - houses[b][1];
+    x = x > 0 ? x : -x;
+    y = y > 0 ? y : -y;
+    return x > y ? x : y;
+}
+long long dist(int a,int b) {
+    return sqrt(pow((houses[a][0] - houses[b][0]),2) + pow((houses[a][1] - houses[b][1]),2));
+}
+void media_approx() {
+    double W = 0.0; 
+    float w = 0.0 ;
+    long long d,x,y;
+    x = 0.0;
+    y = 0.0;
+    for (int i = 0; i <people;i++) {
+        d = dist(people,i);
+        if (d != 0 ) {
+            w = 1.0 /d;
+            W += w;
+            x += houses[i][0]*w;
+            y += houses[i][1]*w;
+            #ifdef Debug
+            cout<<"people "<<i<<"houses x y"<<houses[i][0]<<"  "<<houses[i][1]<<" w  "<<w<<" W "<<W<<"x  "<<x<<"y  "<<y<<"  dist  "<<d<<endl;
+            #endif
+        }
+    }
+    #ifdef Debug
+    cout<<"W "<<W<<"x  "<<x<<"y  "<<y<<endl;
+    #endif
+    houses[people][0]  = x/W;
+    houses[people][1] = y/W;
+}
