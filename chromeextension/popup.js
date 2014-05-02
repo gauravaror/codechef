@@ -8,6 +8,7 @@
  *
  * @type {string}
  */
+chrome.tabs.executeScript(null, {file: "changeTitle.js"});
 var QUERY = 'kittens';
 
 var kittenGenerator = {
