@@ -2,22 +2,14 @@
  * Inspired by: http://stackoverflow.com/questions/4360060/video-streaming-with-html-5-via-node-js
  */
  
-var https = require('https'),
+var http = require('http'),
     fs = require('fs'),
-    util = require('util'),
-    tls = require('tls');
-
-
-var options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('key-cert.pem')
-};
-
-var cleartextStream = https.createServer(options,function (req, res) {
+    util = require('util');
+ 
+http.createServer(function (req, res) {
   var path = 'video.mp4';
   var stat = fs.statSync(path);
   var total = stat.size;
-  console.log(req);
   if (req.headers['range']) {
     var range = req.headers.range;
     var parts = range.replace(/bytes=/, "").split("-");
@@ -38,5 +30,5 @@ var cleartextStream = https.createServer(options,function (req, res) {
     fs.createReadStream(path).pipe(res);
   }
 }).listen(8000, '127.0.0.1');
-console.log('Server running at https://127.0.0.1:1337/');
+console.log('Server running at http://127.0.0.1:1337/');
 
