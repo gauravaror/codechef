@@ -6,17 +6,20 @@
   "version": "1.0",
 
   "permissions": [
-    "tabs","https://secure.flickr.com/","https://www.google.com/","activeTab"
+    "tabs","https://secure.flickr.com/","https://www.google.com/","activeTab", "webNavigation","https://www.youtube.com/"
   ],
   "browser_action": {
     "default_icon": "icon.png",
-    "default_popup": "popup.html"
+    "default_popup": "popup1.html"
   },
+  "background": {
+    "scripts" : ["background.js"]
+    },
   "content_scripts" : [
         {
-        "matches" : ["https://www.google.com/*"],
+        "matches" : ["https://www.youtube.com/*"],
         "js" : ["changeTitle.js"],
-        "run_at" :"document_idle"
+        "run_at" :"document_start"
         }
     ]
 
