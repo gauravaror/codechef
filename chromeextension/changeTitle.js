@@ -14,20 +14,19 @@ alert(document.title);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    alert("sdfsd"+getQueryVariable("v"));
+//    alert("sdfsd"+getQueryVariable("v"));
     var vid = document.getElementsByTagName('video')[0];
     vid.src = "https://127.0.0.1:8000/video.mp4";
-    vid.addEventListener('click', function(){
-    var vid = document.getElementsByTagName('video')[0];
-    alert("sdfsddsfdsf : "+vid.click + "  "+ vid);
-    alert("sdfsd");
-    var vid = document.getElementsByTagName('video')[0];
-    vid.addEventListerner('change',handelerplay);
-    var vid = document.getElementsByTagName('video')[0];
-    vid.addEventListerner('change',handelerchange);
-});
+  //  alert("sdfsd");
+    vid.addEventListener('loadstart',loadstarthandaler);
 });
 
+function loadstarthandaler () {
+    var vid = document.getElementsByTagName('video')[0];
+    vid.src = "https://127.0.0.1:8000/video.mp4";
+    vid.removeEventListener('loadstart',loadstarthandaler);
+
+    }
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split('&');
