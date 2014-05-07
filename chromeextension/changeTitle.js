@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function loadstarthandaler () {
     var vid = document.getElementsByTagName('video')[0];
     vid.src = "https://127.0.0.1:8000/video.mp4";
+    vid.autoplay = true
     vid.removeEventListener('loadstart',loadstarthandaler);
 
     }
