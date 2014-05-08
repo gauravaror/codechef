@@ -16,14 +16,17 @@ alert(document.title);
 document.addEventListener('DOMContentLoaded', function () {
 //    alert("sdfsd"+getQueryVariable("v"));
     var vid = document.getElementsByTagName('video')[0];
-    vid.src = "https://127.0.0.1:8000/video.mp4";
+    var videoid = getQueryVariable("v");
+//    vid.src = "https://127.0.0.1:8000/"+videoid+".mp4";
   //  alert("sdfsd");
     vid.addEventListener('loadstart',loadstarthandaler);
 });
 
 function loadstarthandaler () {
     var vid = document.getElementsByTagName('video')[0];
-    vid.src = "https://127.0.0.1:8000/video.mp4";
+    var videoid = getQueryVariable("v");
+    var stream = vid.src;
+    vid.src = "https://127.0.0.1:8000/"+videoid+".mp4";
     vid.autoplay = true
     vid.removeEventListener('loadstart',loadstarthandaler);
 
