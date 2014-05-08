@@ -23,6 +23,30 @@ var cleartextStream = https.createServer(options,function (req, res) {
       stat = fs.statSync(path);
   var total = stat.size;
   if (req.headers['range']) {
+    nowsend(req,res,path,total);
+  } else {
+    console.log('ALL: ' + total);
+    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
+    fs.createReadStream(path).pipe(res);
+  }
+    }
+    catch(err) {
+        console.log(err);
+        ytdl(req.headers['referer'],{ filter: function(format) { return format.container === 'mp4'; } }).pipe(fs.createWriteStream(path));
+        console.log('Opened FIle now' );
+        letsexecute = function() {
+            stat = fs.statSync(path);
+            var total = stat.size;
+            if (req.headers['range']) {
+                nowsend(req,res,path,total);    
+            }
+        }
+        setTimeout(letsexecute,3000);
+  }
+}).listen(8000, '127.0.0.1');
+console.log('Server running at https://127.0.0.1:8000/');
+
+nowsend = function (req,res,path,total){
     var range = req.headers.range;
     var parts = range.replace(/bytes=/, "").split("-");
     var partialstart = parts[0];
@@ -33,20 +57,7 @@ var cleartextStream = https.createServer(options,function (req, res) {
     var chunksize = (end-start)+1;
     console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
  
-    var file = fs.createReadStream(path, {start: start, end: end});
+    var file = fs.createReadStream(path, {start: start, end: total});
     res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
     file.pipe(res);
-  } else {
-    console.log('ALL: ' + total);
-    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
-    fs.createReadStream(path).pipe(res);
-  }
 }
-catch(err) {
-    ytdl(req.headers['referer'],{ filter: function(format) { return format.container === 'mp4'; },'proxy':'http://web-proxy.cup.hp.com:8080' }).pipe(fs.createWriteStream(path));
-    console.log('Sending Zero' );
-    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
-  }
-}).listen(8000, '127.0.0.1');
-console.log('Server running at https://127.0.0.1:8000/');
-
