@@ -5,7 +5,8 @@
 var https = require('https'),
     fs = require('fs'),
     util = require('util'),
-    tls = require('tls');
+    tls = require('tls'),
+    ytdl = require('ytdl');
 
 
 var options = {
@@ -14,10 +15,13 @@ var options = {
 };
 
 var cleartextStream = https.createServer(options,function (req, res) {
-  var path = 'video.mp4';
-  var stat = fs.statSync(path);
+//  var path = 'video.mp4';
+  var path = "."+req.url;
+  console.log(path);
+  var stat;
+  try {
+      stat = fs.statSync(path);
   var total = stat.size;
-  console.log(req);
   if (req.headers['range']) {
     var range = req.headers.range;
     var parts = range.replace(/bytes=/, "").split("-");
@@ -37,6 +41,12 @@ var cleartextStream = https.createServer(options,function (req, res) {
     res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
     fs.createReadStream(path).pipe(res);
   }
+}
+catch(err) {
+    ytdl(req.headers['referer'],{ filter: function(format) { return format.container === 'mp4'; },'proxy':'http://web-proxy.cup.hp.com:8080' }).pipe(fs.createWriteStream(path));
+    console.log('Sending Zero' );
+    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
+  }
 }).listen(8000, '127.0.0.1');
-console.log('Server running at https://127.0.0.1:1337/');
+console.log('Server running at https://127.0.0.1:8000/');
 
