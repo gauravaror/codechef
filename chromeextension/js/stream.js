@@ -36,17 +36,20 @@ var cleartextStream = https.createServer(options,function (req, res) {
         console.log('Opened FIle now' );
         letsexecute = function() {
             stat = fs.statSync(path);
-            var total = stat.size;
+            
+            var end = stat.size;
+            console.log("now getting the end: "+end);
             if (req.headers['range']) {
-                nowsend(req,res,path,total);    
+                var total = req.headers.range.replace(/bytes=/, "").split("-")[1];
+                nowsend(req,res,path,total,end);    
             }
         }
-        setTimeout(letsexecute,3000);
+        setTimeout(letsexecute,30000);
   }
 }).listen(8000, '127.0.0.1');
 console.log('Server running at https://127.0.0.1:8000/');
 
-nowsend = function (req,res,path,total){
+nowsend = function (req,res,path,total,end1){
     var range = req.headers.range;
     var parts = range.replace(/bytes=/, "").split("-");
     var partialstart = parts[0];
@@ -56,8 +59,22 @@ nowsend = function (req,res,path,total){
     var end = partialend ? parseInt(partialend, 10) : total-1;
     var chunksize = (end-start)+1;
     console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
- 
-    var file = fs.createReadStream(path, {start: start, end: total});
-    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
-    file.pipe(res);
+    console.log('Partial: ' + partialend +' total '+total+' end1 '+ end1);
+    var orignaltotal = total
+    if (end1) {
+        end = partialend;
+        total = partialend;
+    }
+    try {
+        if (orignaltotal == 0)  {
+            throw new Error("No content to let it go to youtube");
+        }
+        res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
+        fs.createReadStream(path).pipe(res);
+    }
+    catch (err) {
+        console.log("problem sending downloading file"+ err)
+        res.statusCode = 500;
+        res.end();
+    }
 }
