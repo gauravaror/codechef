@@ -3,6 +3,7 @@
  */
  
 var https = require('https'),
+    http = require('http'),
     fs = require('fs'),
     util = require('util'),
     tls = require('tls'),
@@ -13,6 +14,36 @@ var options = {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('key-cert.pem')
 };
+
+http.createServer(function (req, res) {
+var path = "."+req.url;
+var id = req.url.split(".")[0].split("/")[1];
+var ytdlurl = "https://www.youtube.com/watch?v="+id
+    console.log(path);
+    console.log(ytdlurl);
+  try {
+      stat = fs.statSync(path);
+      var total = stat.size;
+      if (total != 0) {
+        res.writeHead(200);      
+        res.end();
+      } 
+      else {
+  //      console.log(req);
+        downloadFile(req,path,ytdlurl);
+        res.writeHead(500);
+        res.end();
+      }
+    
+    }
+    catch(err) {
+    //    console.log(req);
+        downloadFile(req,path,ytdlurl);
+        res.writeHead(500);
+        res.end();
+    }
+}).listen(8001, '127.0.0.1');
+console.log('Server running at http://127.0.0.1:8001/');
 
 var cleartextStream = https.createServer(options,function (req, res) {
 //  var path = 'video.mp4';
@@ -32,22 +63,37 @@ var cleartextStream = https.createServer(options,function (req, res) {
     }
     catch(err) {
         console.log(err);
-        ytdl(req.headers['referer'],{ filter: function(format) { return format.container === 'mp4'; } }).pipe(fs.createWriteStream(path));
         console.log('Opened FIle now' );
-        letsexecute = function() {
-            stat = fs.statSync(path);
-            
-            var end = stat.size;
-            console.log("now getting the end: "+end);
-            if (req.headers['range']) {
-                var total = stat.size;
-                nowsend(req,res,path,total,end);    
-            }
-        }
-        setTimeout(letsexecute,30);
+        downloadFile(req,path);
+        setTimeout(letsexecute(req,res,path,total,end),30);
   }
 }).listen(8000, '127.0.0.1');
+
 console.log('Server running at https://127.0.0.1:8000/');
+
+downloadFile = function(req,path,ytdlurl) {
+    try {
+        if (ytdlurl) {
+            ytdl(ytdlurl,{ filter: function(format) { return format.container === 'mp4'; } }).pipe(fs.createWriteStream(path));
+        }
+        else {
+            ytdl(req.headers['referer'],{ filter: function(format) { return format.container === 'mp4'; } }).pipe(fs.createWriteStream(path));
+        }
+    }
+    catch(err ) {
+        console.log("problem downloading the video, lets not stop the script: "+ err);
+    }
+}   
+
+letsexecute = function(req,res,path,total,end) {
+    stat = fs.statSync(path);
+    var end = stat.size;
+    console.log("now getting the end: "+end);
+    if (req.headers['range']) {
+        var total = stat.size;
+            nowsend(req,res,path,total,end);    
+        }
+}
 
 nowsend = function (req,res,path,total,end1){
     var range = req.headers.range;
@@ -70,10 +116,14 @@ nowsend = function (req,res,path,total,end1){
             throw new Error("No content to let it go to youtube");
         }
         res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
-        fs.createReadStream(path).pipe(res);
+        var file = fs.createReadStream(path, {start: start, end: end});
+        file.pipe(res);
+//        fs.createReadStream(path).pipe(res);
     }
     catch (err) {
         console.log("problem sending downloading file"+ err)
+        res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
+        fs.createReadStream(path).pipe(res);
         res.statusCode = 500;
         res.end();
     }
