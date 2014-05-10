@@ -6,7 +6,7 @@
   "version": "1.0",
 
   "permissions": [
-    "tabs","https://secure.flickr.com/","https://www.google.com/","activeTab", "webNavigation","https://www.youtube.com/"
+    "tabs","https://secure.flickr.com/","https://www.google.com/","activeTab", "webNavigation","https://www.youtube.com/","http://127.0.0.1:8001/*"
   ],
   "browser_action": {
     "default_icon": "icon.png",

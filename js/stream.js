@@ -40,11 +40,11 @@ var cleartextStream = https.createServer(options,function (req, res) {
             var end = stat.size;
             console.log("now getting the end: "+end);
             if (req.headers['range']) {
-                var total = req.headers.range.replace(/bytes=/, "").split("-")[1];
+                var total = stat.size;
                 nowsend(req,res,path,total,end);    
             }
         }
-        setTimeout(letsexecute,30000);
+        setTimeout(letsexecute,30);
   }
 }).listen(8000, '127.0.0.1');
 console.log('Server running at https://127.0.0.1:8000/');
