@@ -4,7 +4,66 @@
 #define debug true
 using namespace std;
 
-long long int calculateMaxScore(long long int * bricks,int start,int end);
+
+int maximum(unsigned long long int x, unsigned long long int y, unsigned long long int z) {
+	int max = x; /* assume x is the largest */
+
+	if (y > max) { /* if y is larger than max, assign y to max */
+		max = y;
+	} /* end if */
+
+	if (z > max) { /* if z is larger than max, assign z to max */
+		max = z;
+	} /* end if */
+
+	return max; /* max is the largest value */
+} 
+
+void setOptimalScoreAndMove( unsigned long long int * optimalMoveScore, int * optimalMove, int current,int picked1,int picked2,int picked3) {
+	unsigned long long int max  = maximum(picked1,picked2,picked3);
+	if( max == picked3) {
+		optimalMove[current] = 3;
+		optimalMoveScore[current] = picked3;
+	} else if (max == picked2) {
+		optimalMove[current] = 2;
+		optimalMoveScore[current] = picked2;
+	} else if (max == picked1) {
+		optimalMove[current] = 1;
+		optimalMoveScore[current] = picked1;
+	}
+
+}
+
+long long int getOptimalScore (long long int * bricks,unsigned long long int * optimalMoveScore, int * optimalMove, int start,int end) {
+	bool getScore=false;
+	unsigned long long int score=0;
+	int otherMove =  optimalMove[start];
+	start = start + otherMove+1;
+	if(start < end) {
+		return optimalMoveScore[otherMove];
+	} else {
+		return 0;
+	}
+
+}
+
+
+long long int findOptiomalMoves (long long int * bricks,unsigned long long int * optimalMoveScore, int* optimalMove, int start,int end) {
+
+	optimalMove[end]  = 1;
+	optimalMoveScore[end] = 	bricks[end];
+	optimalMove[end-1]  = 2;
+	optimalMoveScore[end-1] =  bricks[end] + bricks[end-1];
+	optimalMove[end-2]  = 3;
+	optimalMoveScore[end-2] =  bricks[end] + bricks[end -1] + bricks[end -2];
+	for( int i=end-3; i >= start; i--) {
+		long long int picked1 = bricks[i] + getOptimalScore(bricks,optimalMoveScore ,optimalMove,i+1,end);
+		long long int picked2 = bricks[i] + bricks[i+1] + getOptimalScore(bricks,optimalMoveScore , optimalMove,i+1,end);
+		long long int picked3 = bricks[i] + bricks[i+1] + getOptimalScore(bricks,optimalMoveScore ,optimalMove,i+1,end);
+		setOptimalScoreAndMove(optimalMoveScore,optimalMove,i,picked1,picked2,picked3);
+	}
+		
+}
 
 int main() {
 	if(debug) 
@@ -20,7 +79,8 @@ int main() {
 		int bricks;
 		cin>>bricks;
 		long long int * storebricks = (long long int *)malloc(bricks*sizeof(long long int));
-		unsigned long long int optimalMove = (unsigned long long int *)malloc(bricks*sizeof(unsigned long long int));
+		unsigned long long int * optimalMoveScore = (unsigned long long int *)malloc(bricks*sizeof(unsigned long long int));
+		int * optimalMove = (int *)malloc(bricks*sizeof(int));
 		if(debug) 
 		cout<<"bricks for this testcase:"<<bricks<<endl;
 		for(int j = 0;j < bricks; j++){
@@ -32,55 +92,10 @@ int main() {
 			}
 			cout<<endl;
 		}
-		findOptiomalMoves(storebricks,optimalMove , 0,bricks-1);
-		calculateMaxScore(storebricks,optimalMove , 0,bricks-1);
+		findOptiomalMoves(storebricks,optimalMoveScore , optimalMove,0,bricks-1);
+	//	calculateMaxScore(storebricks,optimalMove , 0,bricks-1);
+		cout<<optimalMoveScore[0];
 
 	}
 
-}
-
-long long int findOptiomalMoves (long long int * bricks,unsigned long long int optimalMove, int start,int end) {
-
-	for( int i=end ; i< start; i--) {
-		long long int picked1 = pick1(storebricks,optimalMove , i,end);
-		long long int picked2 = pick2(storebricks,optimalMove , i,end);
-		long long int picked3 = pick3(storebricks,optimalMove , i,end);
-		if( picked1 > picked3) {
-			if(picked1 >picked2) {
-
-			} else if(picked1 >picked2) {
-
-			} else if(picked1 == picked2 ) {
-
-			}
-		} else if (picked1 < picked3) {
-			if(picked3 > picked2) {
-
-			} else if(picked3 >picked2) {
-
-			} else if(picked3 == picked2 ) {
-
-			}
-
-		}
-	}
-
-
-}
-
-long long int calculateMaxScore (long long int * bricks,unsigned long long int optimalMove, int start,int end) {
-
-
-}
-
-long long int pick1 (long long int * bricks,unsigned long long int optimalMove, int current,int end) {
-
-}
-
-long long int pick2 (long long int * bricks,unsigned long long int optimalMove, int current,int end) {
-	
-}
-
-long long int pick3 (long long int * bricks,unsigned long long int optimalMove, int current,int end) {
-	
 }
