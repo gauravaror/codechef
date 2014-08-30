@@ -1,7 +1,7 @@
 //https://www.hackerrank.com/challenges/play-game
 #include <iostream>
 #include <stdlib.h>
-#define debug true
+#define debug false
 using namespace std;
 
 
@@ -38,17 +38,16 @@ long long int getOptimalScore (long long int * bricks,unsigned long long int * o
 	bool getScore=false;
 	unsigned long long int score=0;
 	int otherMove =  optimalMove[start];
-	start = start + otherMove+1;
-	if(start < end) {
-		return optimalMoveScore[otherMove];
+	start = start + otherMove;
+	if(start <= end) {
+		return optimalMoveScore[start];
 	} else {
 		return 0;
 	}
 
 }
 
-
-long long int findOptiomalMoves (long long int * bricks,unsigned long long int * optimalMoveScore, int* optimalMove, int start,int end) {
+void findOptiomalMoves (long long int * bricks,unsigned long long int * optimalMoveScore, int* optimalMove, int start,int end) {
 
 	optimalMove[end]  = 1;
 	optimalMoveScore[end] = 	bricks[end];
@@ -58,8 +57,8 @@ long long int findOptiomalMoves (long long int * bricks,unsigned long long int *
 	optimalMoveScore[end-2] =  bricks[end] + bricks[end -1] + bricks[end -2];
 	for( int i=end-3; i >= start; i--) {
 		long long int picked1 = bricks[i] + getOptimalScore(bricks,optimalMoveScore ,optimalMove,i+1,end);
-		long long int picked2 = bricks[i] + bricks[i+1] + getOptimalScore(bricks,optimalMoveScore , optimalMove,i+1,end);
-		long long int picked3 = bricks[i] + bricks[i+1] + getOptimalScore(bricks,optimalMoveScore ,optimalMove,i+1,end);
+		long long int picked2 = bricks[i] + bricks[i+1] + getOptimalScore(bricks,optimalMoveScore , optimalMove,i+2,end);
+		long long int picked3 = bricks[i] + bricks[i+1] + + bricks[i+2]  + getOptimalScore(bricks,optimalMoveScore ,optimalMove,i+3,end);
 		setOptimalScoreAndMove(optimalMoveScore,optimalMove,i,picked1,picked2,picked3);
 	}
 		
@@ -94,7 +93,7 @@ int main() {
 		}
 		findOptiomalMoves(storebricks,optimalMoveScore , optimalMove,0,bricks-1);
 	//	calculateMaxScore(storebricks,optimalMove , 0,bricks-1);
-		cout<<optimalMoveScore[0];
+		cout<<optimalMoveScore[0]<<endl;
 
 	}
 
