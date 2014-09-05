@@ -5,9 +5,8 @@ app.controller('ArticleDetailController', ['$scope', '$rootScope','$location', f
   $scope.urll = $location.absUrl();
   $scope.urlll = $location.protocol();
   $scope.go = function() {
-      $rootScope.preventNavigation();
 
-    $location.path("/here");
+    location.href = "/herethere";
     //alert("lfd");
   }
 }]);
@@ -38,6 +37,7 @@ app.run(['$rootScope', '$location', function ($rootScope, $location) {
       event.preventDefault();
     }
     else {
+		$location.$$parse(newUrl);
        alert($location.absUrl()+" d "+$location.url());
       $rootScope.allowNavigation();
     }
