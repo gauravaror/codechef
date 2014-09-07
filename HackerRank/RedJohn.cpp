@@ -30,10 +30,10 @@ int getPrimeNumberTill(int* count,int * tile) {
 	}
 	 count[0]=count[1]=count[2]=0;
     for(int i=2;i<=tile[41];i++)
-        {
-            count[i]=count[i-1];
-            if(is_prime[i]) count[i]+=1;
-        }
+	{
+		count[i]=count[i-1];
+		if(is_prime[i]) count[i]+=1;
+	}
 	
 }
 
