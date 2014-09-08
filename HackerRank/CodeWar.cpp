@@ -4,7 +4,9 @@
 #include <cmath>
 #include <vector>
 #include <set>
+#include <map>
 #include <algorithm> 
+#include <stdio.h>
 #define debug false
 //#define arrayLength 299915
  #define arrayLength 299915
@@ -66,9 +68,10 @@ int main() {
 	//count[0] = count[1] = count[2] =1;
 	int * count = (int *)malloc(arrayLength*sizeof(int));
 	bool * is_prime = (bool *)malloc(arrayLength*sizeof(bool));
-	std::vector<std::pair<int,long long int> > primes;
+	std::map<long long int,int> primes;
 	std::set<long long int> insertedPrimes;
-	cout<<"initial not done of 2"<<arrayLength<<endl;
+	if(debug)
+		cout<<"initial not done of 2"<<arrayLength<<endl;
 	is_prime[0] = false;
 	is_prime[1] = false;
 	is_prime[2] = false;
@@ -79,12 +82,14 @@ int main() {
 		//cout<<"dsdfsd"<<i;
 		is_prime[i] = false;
 	}
-	cout<<"initial done of 2"<<endl;
+	if(debug)
+		cout<<"initial done of 2"<<endl;
 	for( int j = 3;j<sqrt(arrayLength);j=j+2) {
 		 for(int k=j;k*j<=sqrt(arrayLength);k++)
                 is_prime[k*j]=false;
 	}
-	cout<<"initial done of 4"<<endl;
+	if(debug)
+		cout<<"initial done of 4"<<endl;
 	 count[0]=count[1]=count[2]=0;
     for(int i=2;i<=arrayLength;i++)
 	{
@@ -99,12 +104,16 @@ int main() {
 			
 			if(insertedPrimes.end() == insertedPrimes.find(curr)) {
 				pair<int,long long int> g = std::make_pair(i,curr);
-				cout<<"number "<<i<<"  sequences "<<curr<<endl;
-				primes.push_back(g);
+				if(debug)
+					cout<<"number "<<i<<"  sequences "<<curr<<endl;
+				primes[curr] = i;
 				insertedPrimes.insert(curr);
 			}
 		}
 	}
+	int number;
 	
+	while(scanf("%d", &number) == 1)
+		cout<<number<<primes[number]<<endl;
 }
 
