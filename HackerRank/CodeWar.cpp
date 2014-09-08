@@ -5,9 +5,9 @@
 #include <vector>
 #include <set>
 #include <algorithm> 
-#define debug true
+#define debug false
 //#define arrayLength 299915
- #define arrayLength 909915
+ #define arrayLength 299915
 using namespace std;
 
 
@@ -32,7 +32,7 @@ long long int primeFactors(int n)
     while (n%2 == 0)
     {
     	if(debug)
-    	 //	cout<<" "<<2<<" ";
+    	 	cout<<" "<<2<<" ";
         totalPrimeFactors++;
         n = n/2;
         currentFactor++;
@@ -41,13 +41,13 @@ long long int primeFactors(int n)
     currentFactor = 0;
  
     // n must be odd at this point.  So we can skip one element (Note i = i +2)
-    for (int i = 3; i <= sqrt(n); i = i+2)
+    for (int i = 3; i <= n; i = i+2)
     {
         // While i divides n, print i and divide n
         while (n%i == 0)
         {
         	if(debug)
-         //   	cout<<" "<<i<<" ";
+           	cout<<" "<<i<<" ";
             totalPrimeFactors++;
             n = n/i;
         }
@@ -56,7 +56,8 @@ long long int primeFactors(int n)
     }
   
     numerator = FactorialFind(totalPrimeFactors);
- 	//-cout<<" number "<<number<<" prime factors "<<totalPrimeFactors<<" configs  "<<numerator/denominator<<" numerator "<<numerator<<"  denominator  "<< denominator<<endl;
+    if(debug)
+ 		cout<<" number "<<number<<" prime factors "<<totalPrimeFactors<<" configs  "<<numerator/denominator<<" numerator "<<numerator<<"  denominator  "<< denominator<<endl;
     return numerator/denominator;
 }
 
