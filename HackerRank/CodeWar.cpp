@@ -9,15 +9,7 @@
 //#define arrayLength 299915
  #define arrayLength 909915
 using namespace std;
-int calculateWallConfiguration(int max_length,int * WallConfig) {
-	WallConfig[0] = 1;
-	WallConfig[1] = 1;
-	WallConfig[2] = 1;
-	WallConfig[3] = 1;
-	for(int i= 4;i<4+max_length;i++) {
-		WallConfig[i] = WallConfig[i-1] + WallConfig[i-4];
-	}
-}
+
 
 long long int FactorialFind(int num) {
 	long long int factorial = 1;
