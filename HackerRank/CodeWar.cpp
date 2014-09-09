@@ -1,4 +1,3 @@
-//https://www.hackerrank.com/challenges/play-game
 #include <iostream>
 #include <stdlib.h>
 #include <cmath>
