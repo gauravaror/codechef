@@ -16,7 +16,6 @@ int calculateWallConfiguration(int max_length,int * WallConfig) {
 }
 
 int getPrimeNumberTill(int* count,int * tile) {
-	//count[0] = count[1] = count[2] =1;
 	bool * is_prime = (bool *)malloc(arrayLength*sizeof(bool));
 	//cout<<"initial not done of 2"<<tile[41]<<endl;
 	is_prime[0] = false;
@@ -26,24 +25,23 @@ int getPrimeNumberTill(int* count,int * tile) {
 		is_prime[i] = true;
 	}
 	for( int i =4;i<tile[41];i=i+2) {
-		//cout<<"dsdfsd"<<i;
+
 		is_prime[i] = false;
 	}
-	//cout<<"initial done of 2"<<endl;
 	for( int j = 3;j<sqrt(tile[41]);j=j+2) {
 		 for(int k=j;k*j<=sqrt(tile[41]);k++)
                 is_prime[k*j]=false;
 	}
-	//cout<<"initial done of 4"<<endl;
+
 	 count[0]=count[1]=count[2]=0;
     for(int i=2;i<=tile[41];i++)
-	{
+    {
 		count[i]=count[i-1];
-		//cout<<"Prime number"<<i<<<<endl;
+
 		if(is_prime[i]) {
 		 count[i]+=1;
 		} else {
-		//	cout<<"NON Prime number"<<i<<endl;
+
 		}
 	}
 	
@@ -52,7 +50,7 @@ int getPrimeNumberTill(int* count,int * tile) {
 int main() {
 	if (debug) 
 		cout<<"Starting program"<<endl;
-	// Number of testcases;
+
 	int * WallConfig = (int *)malloc(41*sizeof(int));
 	int * PrimeCalc = (int *)malloc(arrayLength*sizeof(int));
 	calculateWallConfiguration(38,WallConfig);
@@ -72,7 +70,7 @@ int main() {
 		cin>>wall_config;
 		if (debug)
 			cout<<"current wall config: "<<wall_config;
-		//int combinations = findWallConfiguration(wall_config);
+
 		cout<<PrimeCalc[wall_config]<<endl;
 	}
 
