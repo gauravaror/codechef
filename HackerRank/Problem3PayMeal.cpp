@@ -21,8 +21,8 @@ int main() {
 	int 1/2dime = 1;
 	int 1/4dime = 1;*/
 	int y,z;
-	int loopbound = (3*number - 17)/15;
-	for( int x=1 ; x < loopbound+1;x++) {
+	int loopbound = (3*number - 16)/15;
+	for( int x=0 ; x < loopbound+1;x++) {
 		y = 3*number - 16 - 15*x;
 		z = number - 3 -x - y;
 		if ( z < 1) {
