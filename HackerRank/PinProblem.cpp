@@ -12,7 +12,7 @@ bool isDivisors[11][mx];
 map<int,list<int> > numbers;
 
 void proProcess() {
-		for (int k = 1; k <= 10; ++k)
+		for (int k = 2; k <= 10; ++k)
 		{
 			std::list<int> v;
 			numbers[k] = v;
@@ -53,22 +53,25 @@ int main() {
 			div_.push_back(temp);
 			if(debug) cout<<" divisors :"<<j<<" is "<<temp<<endl;
 		}
+		div_.remove(1);
 		div_.reverse();
 		div_.unique();
+
 		it = div_.begin();
-		//list<int> highestfactors(numbers[*it]);
+		if(m == 1 && div_.size() == 0) {
+			cout<<n<<endl;
+			continue;
+		}
+		list<int> highestfactors(numbers[*it]);
 		list<int> copyhighestfactors(numbers[*it]);
 		std::list<int>::iterator vit;
-		list<int>  highestfactors1 (copyhighestfactors);
-		for(vit = highestfactors1.begin(); vit != highestfactors1.end();++vit) {
-				if(*vit > n) {
-					copyhighestfactors.remove(*vit);
-				}
-		}
-		++it;
+		list<int>  highestfactors1 (copyhighestfactors);		
 		for (; it != div_.end(); ++it)   {
 			list<int>  highestfactors (copyhighestfactors);
 			for(vit = highestfactors.begin(); vit != highestfactors.end();++vit) {
+				if(*vit > n) {
+					copyhighestfactors.remove(*vit);
+				}
 				if(!isDivisors[*it][*vit]) {
 					copyhighestfactors.remove(*vit);
 				}
