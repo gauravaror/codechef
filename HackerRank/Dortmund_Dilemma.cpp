@@ -7,7 +7,7 @@ using namespace std;
 
 #define debug false
 #define MOD 1000000009
-#define maxlen 10
+#define maxlen 100010
 
 
 

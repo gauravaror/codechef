@@ -66,7 +66,9 @@ int main() {
 		list<int> copyhighestfactors(numbers[*it]);
 		std::list<int>::iterator vit;
 		list<int>  highestfactors1 (copyhighestfactors);		
+		int count = 0;
 		for (; it != div_.end(); ++it)   {
+			int internalcount = 1;
 			list<int>  highestfactors (copyhighestfactors);
 			for(vit = highestfactors.begin(); vit != highestfactors.end();++vit) {
 				if(*vit > n) {
@@ -74,6 +76,8 @@ int main() {
 				}
 				if(!isDivisors[*it][*vit]) {
 					copyhighestfactors.remove(*vit);
+				} else {
+					internalcount++;
 				}
 			}
 		}
