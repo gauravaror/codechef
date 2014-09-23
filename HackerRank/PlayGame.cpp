@@ -34,7 +34,7 @@ void setOptimalScoreAndMove( unsigned long long int * optimalMoveScore, int * op
 
 }
 
-long long int getOptimalScore (long long int * bricks,unsigned long long int * optimalMoveScore, int * optimalMove, int start,int end) {
+long long int getOptimalScore (unsigned long long int * bricks,unsigned long long int * optimalMoveScore, int * optimalMove, int start,int end) {
 	bool getScore=false;
 	unsigned long long int score=0;
 	int otherMove =  optimalMove[start];
@@ -47,7 +47,7 @@ long long int getOptimalScore (long long int * bricks,unsigned long long int * o
 
 }
 
-void findOptiomalMoves (long long int * bricks,unsigned long long int * optimalMoveScore, int* optimalMove, int start,int end) {
+void findOptiomalMoves (unsigned long long int * bricks,unsigned long long int * optimalMoveScore, int* optimalMove, int start,int end) {
 
 	optimalMove[end]  = 1;
 	optimalMoveScore[end] = 	bricks[end];
@@ -77,7 +77,7 @@ int main() {
 		cout<<"testcase :"<<i<<endl;
 		int bricks;
 		cin>>bricks;
-		long long int * storebricks = (long long int *)malloc(bricks*sizeof(long long int));
+		unsigned long long int * storebricks = (unsigned long long int *)malloc(bricks*sizeof(unsigned long long int));
 		unsigned long long int * optimalMoveScore = (unsigned long long int *)malloc(bricks*sizeof(unsigned long long int));
 		int * optimalMove = (int *)malloc(bricks*sizeof(int));
 		if(debug) 
